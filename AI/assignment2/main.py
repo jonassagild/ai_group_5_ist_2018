@@ -110,7 +110,11 @@ class Problem(csp.CSP):
         # TODO: something
 
         # there are several ways to implement this function.
-        # one way is to
+        # one way is to create all the binary constraints (I don't think it's a smart way of  doing it), and the other
+        # way is to go through the list of constraints that the task has specified E.g.
+        # • each student class can only attend one class at a time
+        # • no two weekly classes of the same course and type may occur on the same weekday
+        # • each room can only hold one class at a time (this one might already be handles since we're not using deepcopy
 
         return False
 
