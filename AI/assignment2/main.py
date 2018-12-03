@@ -81,10 +81,13 @@ class Problem(csp.CSP):
 
         self.domains = {}
         # creates the domain dict. Each domain is unique, so we need to use deepcopy
+        # Since only one class can be connected to one timetableslot, we do not have to do deepcopy.
+        # (not 100% sure of this) If any of the methods in the csp removes parts of the domain after e.g. forward
+        # checking, then this will end up wrong.
+        # TODO: ask teacher about this! (Or just check yourself)
         for variable in self.variables:
-            domain_copy = copy.deepcopy(domain)
-            self.domains[variable] = domain_copy
-
+            # domain_copy = copy.deepcopy(domain)
+            self.domains[variable] = domain
 
     def create_variables(self):
         """
@@ -93,6 +96,23 @@ class Problem(csp.CSP):
         :return: none
         """
         self.variables = self.W
+
+    def constraints_function(self, A, a, B, b):
+        """
+        A function f(A, a, B, b) that returns true if neighbors A, B satisfy the constraint when they have values A=a, B=b
+        :param A:
+        :param a:
+        :param B:
+        :param b:
+        :return: True or False
+        """
+
+        # TODO: something
+
+        # there are several ways to implement this function.
+        # one way is to
+
+        return False
 
 
 def solve(input_file, output_file):
