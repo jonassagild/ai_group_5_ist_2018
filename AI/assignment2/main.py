@@ -86,8 +86,8 @@ class Problem(csp.CSP):
         # checking, then this will end up wrong.
         # TODO: ask teacher about this! (Or just check yourself)
         for variable in self.variables:
-            # domain_copy = copy.deepcopy(domain)
-            self.domains[variable] = domain
+            domain_copy = copy.deepcopy(domain)
+            self.domains[variable] = domain_copy
 
     def create_variables(self):
         """
@@ -115,6 +115,12 @@ class Problem(csp.CSP):
         # • each student class can only attend one class at a time
         # • no two weekly classes of the same course and type may occur on the same weekday
         # • each room can only hold one class at a time (this one might already be handles since we're not using deepcopy
+        # OR should we use deepcopy? ...
+
+        # should the graph (the neighbor list) contain a complete graph? (all vertices are connected together)
+        # since
+
+        # • each student class can only attend one class at a time
 
         return False
 
