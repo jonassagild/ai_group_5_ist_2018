@@ -10,6 +10,10 @@ class Problem(csp.CSP):
         self.read_input_data(fh)
         self.create_variables()
         self.create_domain()
+
+        # temporary
+        self.graph = []
+        # end temporary
         super().__init__(self.variables, self.domains, self.graph, self.constraints_function)
 
     def dump_solution(self, fh):
@@ -27,8 +31,6 @@ class Problem(csp.CSP):
 
         # creates a list of input file. removes \n
         filelines = file.read().splitlines()
-
-        print(filelines)
 
         # adds timetable slots to list T
         timetable_slot_list = filelines[0].split(' ')
@@ -59,11 +61,18 @@ class Problem(csp.CSP):
             self.W.append((el.split(',')[0], el.split(',')[1], el.split(',')[2]))
 
         # adds associations to list A
-        associations_list = filelines[3].split(' ')
+        associations_list = filelines[4].split(' ')
         del associations_list[0]
         self.A = []
         for el in associations_list:
             self.A.append((el.split(',')[0], el.split(',')[1]))
+
+        self.D = {}
+        for association in self.A:
+            if self.D.get(association[1], False):
+                self.D[association[1]].add(association[0])
+            else:
+                self.D[association[1]] = {association[0]}
 
     def create_domain(self):
         """
@@ -106,23 +115,25 @@ class Problem(csp.CSP):
         :param b:
         :return: True or False
         """
-
-        # TODO: something
-
-        # there are several ways to implement this function.
-        # one way is to create all the binary constraints (I don't think it's a smart way of  doing it), and the other
-        # way is to go through the list of constraints that the task has specified E.g.
-        # • each student class can only attend one class at a time
-        # • no two weekly classes of the same course and type may occur on the same weekday
-        # • each room can only hold one class at a time (this one might already be handles since we're not using deepcopy
-        # OR should we use deepcopy? ...
-
-        # should the graph (the neighbor list) contain a complete graph? (all vertices are connected together)
-        # since
+        # • each room can only hold one class at a time
+        if a == b:
+            return False
 
         # • each student class can only attend one class at a time
+        # checks if the assigned times are the same
+        if a[1] == b[1]:
+            # checks if some of the student classes are the same for this class
+            if self.D[A[0]] & self.D[B[0]]:
+                return False
 
-        return False
+        # checks if the student class and the type is the same
+        if A[0] == B[0] and A[1] == B[1]:
+            # checks if its the same weekday
+            if a[1][0] == b[1][0]:
+                return False
+
+        # if nothing is false, then all constraints are true
+        return True
 
 
 def solve(input_file, output_file):
