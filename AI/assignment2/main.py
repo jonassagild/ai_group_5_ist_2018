@@ -1,5 +1,4 @@
 import copy
-
 import aim.csp as csp
 
 
@@ -11,14 +10,17 @@ class Problem(csp.CSP):
         self.create_variables()
         self.create_domain()
         self.create_neighbors()
-        # temporary
-        #self.graph = []
-        # end temporary
+
         super().__init__(self.variables, self.domains, self.neighbors, self.constraints_function)
 
-    def dump_solution(self, fh):
+    def dump_solution(self, fh, assignment):
         # Place here your code to write solution to opened file object fh
-        pass
+        solution = "";
+        for key in assignment:
+            solution = solution + key[0] + ',' + key[1] + ',' + key[2] + ' ' + assignment[key][1][0] + ',' + \
+                       assignment[key][1][1] + ' ' + assignment[key][0] + "\n"
+
+        fh.write(solution)
 
     def read_input_data(self, path):
         """
@@ -108,17 +110,18 @@ class Problem(csp.CSP):
 
     def create_neighbors(self):
         """
-        
+
         :return: none
         """
 
         self.neighbors = {}
-        
+
         for var in self.variables:
-            neighbors=[]
-            neighbors=copy.deepcopy(self.variables)
+            neighbors = []
+            neighbors = copy.deepcopy(self.variables)
             neighbors.remove(var)
             self.neighbors[var] = neighbors
+
     def constraints_function(self, A, a, B, b):
         """
         A function f(A, a, B, b) that returns true if neighbors A, B satisfy the constraint when they have values A=a, B=b
@@ -151,15 +154,11 @@ class Problem(csp.CSP):
 
 def solve(input_file, output_file):
     p = Problem(input_file)
-    A=('IASD', 'PB', '1')
-    a=('EA1', ('Mon', '9'))
-    B=('IASD', 'T', '2')
-    b=('V0.02', ('Tue', '9'))
-    f=p.constraints_function(A,a,B,b)
-    print(f)
-    #csp.backtracking_search(p,p.domains)
+    # csp.backtracking_search(p,p.domains)
     # Place here your code that calls function csp.backtracking_search(self, ...)
-    p.dump_solution(output_file)
+    assignment = csp.backtracking_search(p)
+
+    p.dump_solution(output_file, assignment)
 
 
 if __name__ == "__main__":
@@ -167,5 +166,5 @@ if __name__ == "__main__":
     input_file = open(input_path)
 
     output_path = "./output1.txt"
-    output_file = open(output_path)
+    output_file = open(output_path, 'w')
     solve(input_file, output_file)
