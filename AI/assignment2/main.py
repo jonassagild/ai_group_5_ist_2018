@@ -10,11 +10,11 @@ class Problem(csp.CSP):
         self.read_input_data(fh)
         self.create_variables()
         self.create_domain()
-
+        self.create_neighbors()
         # temporary
-        self.graph = []
+        #self.graph = []
         # end temporary
-        super().__init__(self.variables, self.domains, self.graph, self.constraints_function)
+        super().__init__(self.variables, self.domains, self.neighbors, self.constraints_function)
 
     def dump_solution(self, fh):
         # Place here your code to write solution to opened file object fh
@@ -106,6 +106,19 @@ class Problem(csp.CSP):
         """
         self.variables = self.W
 
+    def create_neighbors(self):
+        """
+        
+        :return: none
+        """
+
+        self.neighbors = {}
+        
+        for var in self.variables:
+            neighbors=[]
+            neighbors=copy.deepcopy(self.variables)
+            neighbors.remove(var)
+            self.neighbors[var] = neighbors
     def constraints_function(self, A, a, B, b):
         """
         A function f(A, a, B, b) that returns true if neighbors A, B satisfy the constraint when they have values A=a, B=b
@@ -138,7 +151,13 @@ class Problem(csp.CSP):
 
 def solve(input_file, output_file):
     p = Problem(input_file)
-
+    A=('IASD', 'PB', '1')
+    a=('EA1', ('Mon', '9'))
+    B=('IASD', 'T', '2')
+    b=('V0.02', ('Tue', '9'))
+    f=p.constraints_function(A,a,B,b)
+    print(f)
+    #csp.backtracking_search(p,p.domains)
     # Place here your code that calls function csp.backtracking_search(self, ...)
     p.dump_solution(output_file)
 
